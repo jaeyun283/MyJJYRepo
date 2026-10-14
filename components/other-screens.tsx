@@ -176,6 +176,13 @@ export function Consultation({
     .flatMap((p) => p.materials)
     .filter((m) => m.text && m.kind !== "file");
   async function send() {
+    if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true") {
+      setConfirm(false);
+      setError(
+        "이 공개 데모에는 AI 서버가 연결되어 있지 않습니다. 질문과 자료를 외부 AI에 전송하지 않았습니다.",
+      );
+      return;
+    }
     setLoading(true);
     setError("");
     setConfirm(false);
@@ -364,6 +371,16 @@ export function SettingsScreen({ ctx }: { ctx: AppContext }) {
     [busy, setBusy] = useState(false),
     [reset, setReset] = useState(false);
   async function load() {
+    if (process.env.NEXT_PUBLIC_STATIC_DEMO === "true") {
+      setStatus({
+        account: { configured: false, connected: false },
+        ai: { configured: false, connected: false },
+        drive: { configured: false, connected: false },
+      });
+      setError("");
+      setBusy(false);
+      return;
+    }
     setBusy(true);
     setError("");
     try {
